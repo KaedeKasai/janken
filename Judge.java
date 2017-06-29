@@ -5,6 +5,10 @@ import java.util.ArrayList;
 public class Judge {
 	
 	private String name;
+	private final int GU    = 0;
+	private final int CHOKI = 1;
+	private final int PA    = 2;
+	private final int AIKO  = -1;
 	
 	public Judge(String name) {
 		super();
@@ -13,10 +17,6 @@ public class Judge {
 	
 	public void judgeJanken(ArrayList<Player> jankenPlayers){
 		
-		final int GU    = 0;
-		final int CHOKI = 1;
-		final int PA    = 2;
-		final int AIKO  = -1;
 		final int playerNum = jankenPlayers.size();
 		
 		int[][] judgePattern = 
@@ -28,9 +28,14 @@ public class Judge {
 		}
 		
 		if(playerNum == 2){
+			final String player1Name = jankenPlayers.get(0).getName();
 			final int player1Hand =jankenPlayers.get(0).showHand();
+			final String player2Name = jankenPlayers.get(1).getName();
 			final int player2Hand =jankenPlayers.get(1).showHand();
 			final int winPattern = judgePattern[player1Hand][player2Hand];
+			
+			printHand(player1Name, player1Hand);
+			printHand(player2Name, player2Hand);
 			
 			if(winPattern == AIKO){
 				System.out.println("引き分け！");
@@ -53,30 +58,21 @@ public class Judge {
 			
 			for(Player player : jankenPlayers){
 				final int hand = player.showHand();
-				if(hand == GU){
-					if(!guFlag){
-						guFlag = true;
-						handType.add(GU);
-					}
-					System.out.printf("%-8s:ぐー\n",player.getName());
-				}else if(hand == CHOKI){
-					if(!chokiFlag){
-						chokiFlag = true;
-						handType.add(CHOKI);
-					}
-					System.out.printf("%-8s:ちょき\n",player.getName());
-				}else{
-					if(!paFlag){
-						paFlag = true;
-						handType.add(PA);
-					}
-					System.out.printf("%-8s:ぱー\n",player.getName());
+				if(hand == GU && !guFlag){
+					handType.add(GU);
+				}else if(hand == CHOKI && !chokiFlag){
+					handType.add(CHOKI);
+				}else if(hand == PA && !paFlag){
+					paFlag = true;
+					handType.add(PA);
 				}
+				printHand(player.getName(),hand);
 				playerHands.add(hand);
 			}
 			
 			if(handType.size() <= 1 || handType.size() >= 3){
-				System.out.println("引き分け！");
+				System.out.println("引き分け！もう一度！\n");
+				judgeJanken(jankenPlayers);
 				return;
 			}
 			
@@ -99,7 +95,7 @@ public class Judge {
 		String jankenchampion = "";
 		for(int i = 0; roundNum > i; i++){
 			judgeJanken(jankenPlayers);
-			System.out.println();
+			System.out.println("\n---------------------------\n");
 		}
 		System.out.println("最終結果");
 		for(Player player : jankenPlayers){
@@ -116,6 +112,17 @@ public class Judge {
 		}
 		System.out.println("です！");
 
+	}
+	
+	public void printHand(String name, int hand){
+		if(hand == GU){
+			System.out.printf("%-8s:ぐー\n", name);
+			return;
+		}else if(hand == CHOKI){
+			System.out.printf("%-8s:ちょき\n", name);
+			return;
+		}
+		System.out.printf("%-8s:ぱー\n", name);
 	}
 	
 

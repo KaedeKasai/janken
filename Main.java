@@ -9,21 +9,23 @@ public class Main {
 		
 		ArrayList<Player> jankenPlayers = new ArrayList<Player>();
 		
-		Player kaede = new Player("kaede");
+//		Player kaede = new Player("kaede");
 		Player kawashi = new Player("kawashi");
 		Player sakai = new Player("sakai");
 		Player taishi = new Player("taishi");
+		Player murajo = new Player("murajo");
 		
 		
-		jankenPlayers.add(kaede);
+//		jankenPlayers.add(kaede);
 		jankenPlayers.add(kawashi);
 		jankenPlayers.add(sakai);
 		jankenPlayers.add(taishi);
+		jankenPlayers.add(murajo);
 		
 		
 		Judge isono = new Judge("磯野");
 		
-		isono.startJudge(jankenPlayers,5);
+		isono.startJudge(jankenPlayers,3);
 	}
 
 }
