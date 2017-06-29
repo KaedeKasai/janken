@@ -111,6 +111,8 @@ public class Judge {
 			}
 		}
 		System.out.println("です！");
+		
+		jankenRanking(jankenPlayers);
 
 	}
 	
@@ -125,7 +127,30 @@ public class Judge {
 		System.out.printf("%-8s:ぱー\n", name);
 	}
 	
-
+	public void jankenRanking(ArrayList<Player> jankenPlayers){
+		
+		Player[] WinCounts = new Player[jankenPlayers.size()];
+		for(int i = 0; jankenPlayers.size() > i; i++){
+			WinCounts[i] = jankenPlayers.get(i);
+		}
+		for (int range = WinCounts.length / 2; range > 0; range /= 2) {
+			for (int h = 0; h < range; h++) {
+				for (int i = h + range; i < WinCounts.length; i += range) {
+					Player insertionData = WinCounts[i];
+					int j = i;
+					for (; j >= range && WinCounts[j - range].getWinCount() < insertionData.getWinCount(); j -= range) {
+						WinCounts[j] = WinCounts[j - range];
+					}
+					WinCounts[j] = insertionData;
+				}
+			}
+		}
+		System.out.println("\nランキング");
+		for(int i = 0; WinCounts.length > i; i++){
+			System.out.println(i + "位:" + WinCounts[i].getName());
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}

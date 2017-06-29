@@ -25,7 +25,7 @@ public class Main {
 		
 		Judge isono = new Judge("磯野");
 		
-		isono.startJudge(jankenPlayers,3);
+		isono.startJudge(jankenPlayers,5);
 	}
 
 }
