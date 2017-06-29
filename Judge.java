@@ -94,26 +94,27 @@ public class Judge {
 		}	
 	}
 
-	public void startJudge(ArrayList<Player> jankenPlayers){
+	public void startJudge(ArrayList<Player> jankenPlayers,int roundNum){
 		int MaxWinCount = 0;
 		String jankenchampion = "";
-
-		judgeJanken(jankenPlayers);
-		System.out.println();
-		judgeJanken(jankenPlayers);
-		System.out.println();
-		judgeJanken(jankenPlayers);
-		System.out.println();
+		for(int i = 0; roundNum > i; i++){
+			judgeJanken(jankenPlayers);
+			System.out.println();
+		}
 		System.out.println("最終結果");
 		for(Player player : jankenPlayers){
 			System.out.printf("%-8s:%d勝\n",player.getName(),player.getWinCount());
 			if(player.getWinCount() > MaxWinCount){
 				MaxWinCount = player.getWinCount();
-				jankenchampion = player.getName();
 			}
 		}
-
-		System.out.println("優勝は" + jankenchampion + "です！");
+		System.out.print("\n優勝は");
+		for(Player player : jankenPlayers){
+			if(player.getWinCount() == MaxWinCount){
+				System.out.print(player.getName() + ",");
+			}
+		}
+		System.out.println("です！");
 
 	}
 	
