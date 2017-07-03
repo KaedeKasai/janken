@@ -21,11 +21,11 @@ public class Judge {
 	public void judgeJanken(ArrayList<Player> jankenPlayers){
 		
 		final int playerNum = jankenPlayers.size();
-		/*
-		 * 下のjudgePatternは、二つの[]の中にGU,CHOKI,PAを入れると強いほうの手が返却される
-		 * 例:int x =judgePattern[GU][CHIKI]
-		 *    この例だとint xにGUが格納される
-		 */
+/*
+ *      下のjudgePatternは、二つの[]の中にGU,CHOKI,PAを入れると強いほうの手が返却される
+ *      例:int x =judgePattern[GU][CHIKI]
+ *         この例だとint xにGUが格納される
+ */
 		int[][] judgePattern =
 			{{AIKO, GU, PA},{GU, AIKO, CHOKI},{PA, CHOKI, AIKO}};
 		
@@ -104,14 +104,16 @@ public class Judge {
 		}
 		System.out.println("の勝利！");
 	}
-
+	//じゃんけんを開始するメソッド
 	public void startJudge(ArrayList<Player> jankenPlayers,int roundNum){
-		System.out.println("ゲームを開始します 審判:" + this.name + "さん\n");
-		int MaxWinCount = 0;
+		System.out.println("・ゲームを開始します 審判:" + this.name + "さん\n");
+		int MaxWinCount = 0; //この試合での最大勝利数が格納される
+		//roundNumの数の分だけ、judgeJankenを実行する
 		for(int i = 0; roundNum > i; i++){
 			judgeJanken(jankenPlayers);
 			System.out.println("\n---------------------------\n");
 		}
+		//それぞれのプレイヤーの勝利数を表示させ、同時に最大勝利数を求める
 		System.out.println("最終結果");
 		for(Player player : jankenPlayers){
 			System.out.printf("%-8s:%d勝\n",player.getName(),player.getWinCount());
@@ -119,6 +121,7 @@ public class Judge {
 				MaxWinCount = player.getWinCount();
 			}
 		}
+		//MaxWinCountと同じ数のプレイヤーを優勝者と表示する
 		boolean firstTime = true;
 		System.out.print("\n優勝は");
 		for(Player player : jankenPlayers){
@@ -132,7 +135,7 @@ public class Judge {
 			}
 		}
 		System.out.println("です！");
-		
+		//ランキングの表示
 		jankenRanking(jankenPlayers);
 
 	}

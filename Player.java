@@ -14,13 +14,13 @@ public class Player {
 	public Player(String name) {
 		this.name = name;
 		this.rateFlag = false;
-		System.out.println("プレイヤー「" + name +"」を生成しました");
+		System.out.println("・プレイヤー「" + name +"」を生成しました");
 	}
 	
 	public Player(String name,int guRate,int chokiRate) {
 		this.name = name;
 		if(guRate + chokiRate > 100){
-			System.out.println("注意:出す手の割合の数値が正しくありません\n通常のプレイヤー「" + name +"」を生成しました");
+			System.out.println("・注意:「" + name +"」の出す手の割合の数値が正しくありません\nプレイヤー「" + name +"」を生成しました");
 			this.rateFlag = false;
 			return;
 		}
@@ -28,7 +28,7 @@ public class Player {
 		this.guRate = guRate;
 		this.chokiRate = chokiRate;
 		this.paRate = 100 - (guRate + chokiRate);
-		System.out.println("オプションプレイヤー「" + name +"」を生成しました");
+		System.out.println("・オプションプレイヤー「" + name +"」を生成しました");
 		System.out.println("「" + name +"」の出す手の割合:グー "+ guRate +"%,チョキ "+ chokiRate +"%,パー "+ paRate +"%");
 	}
 	
@@ -43,7 +43,7 @@ public class Player {
 		this.guRate = guRate;
 		this.chokiRate = chokiRate;
 		this.paRate = paRate;
-		System.out.println("オプションプレイヤー「" + name +"」を生成しました");
+		System.out.println("・オプションプレイヤー「" + name +"」を生成しました");
 		System.out.println("「" + name +"」の出す手の割合:グー "+ guRate +"%,チョキ "+ chokiRate +"%,パー "+ paRate +"%");
 	}
 
