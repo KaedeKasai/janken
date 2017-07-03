@@ -57,9 +57,9 @@ public class Judge {
 //			}
 		}
 		
-		boolean putOutGu = false;
+		boolean putOutGu    = false;
 		boolean putOutChoki = false;
-		boolean putOutPa = false;
+		boolean putOutPa    = false;
 		ArrayList<Integer> handTypes = new ArrayList<Integer>(); //このラウンドで使われた手の種類を格納(最大３つ)
 		ArrayList<Integer> playerHands = new ArrayList<Integer>(); //それぞれのプレイヤーの手を格納
 		//このラウンドに使われた手の種類と数をチェックしている
@@ -86,7 +86,7 @@ public class Judge {
 		}
 		//handTypesにある二つの手をjudgePatternの引数にし、返却値とプレイヤーの手と比較して勝敗を判断する
 		final int winPattern = judgePattern[handTypes.get(0)][handTypes.get(1)];
-		boolean firstTime = true;
+		boolean firstTime    = true;
 		for(int i = 0 ;playerNum > i;i++){
 			
 			if(playerHands.get(i) == winPattern){
