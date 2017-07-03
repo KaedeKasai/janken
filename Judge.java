@@ -153,25 +153,29 @@ public class Judge {
 	//シェルソートで勝った回数順に並べる
 	public void jankenRanking(ArrayList<Player> jankenPlayers){
 		
-		Player[] WinCounts = new Player[jankenPlayers.size()];
+		Player[] winCounts = new Player[jankenPlayers.size()];
 		for(int i = 0; jankenPlayers.size() > i; i++){
-			WinCounts[i] = jankenPlayers.get(i);
+			winCounts[i] = jankenPlayers.get(i);
 		}
-		for (int range = WinCounts.length / 2; range > 0; range /= 2) {
+		for (int range = winCounts.length / 2; range > 0; range /= 2) {
 			for (int i = 0; i < range; i++) {
-				for (int j = i + range; j < WinCounts.length; j += range) {
-					Player currentPlayer = WinCounts[j];
+				for (int j = i + range; j < winCounts.length; j += range) {
+					Player currentPlayer = winCounts[j];
 					int k = j;
-					for (; k >= range && WinCounts[k - range].getWinCount() < currentPlayer.getWinCount(); k -= range) {
-						WinCounts[k] = WinCounts[k - range];
+					for (; k >= range && winCounts[k - range].getWinCount() < currentPlayer.getWinCount(); k -= range) {
+						winCounts[k] = winCounts[k - range];
 					}
-					WinCounts[k] = currentPlayer;
+					winCounts[k] = currentPlayer;
 				}
 			}
 		}
 		System.out.println("\nランキング");
-		for(int i = 0; WinCounts.length > i; i++){
-			System.out.printf("%d位:%-8s %d勝\n",(i+1),WinCounts[i].getName(),WinCounts[i].getWinCount());
+		int rank = 1;
+		for(int i = 0; winCounts.length > i; i++){
+			if(i > 0 && winCounts[i].getWinCount() != winCounts[i-1].getWinCount()) {
+				rank = i + 1;
+			}
+			System.out.printf("%d位:%-8s %d勝\n",rank,winCounts[i].getName(),winCounts[i].getWinCount());
 		}
 	}
 	
