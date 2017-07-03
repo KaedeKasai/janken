@@ -10,89 +10,104 @@ public class Judge {
 	private final int PA    = 2;
 	private final int AIKO  = -1;
 	
+	public Judge() {
+		this.name = "名無し";
+	}
+	
 	public Judge(String name) {
-		super();
 		this.name = name;
 	}
 	
 	public void judgeJanken(ArrayList<Player> jankenPlayers){
 		
 		final int playerNum = jankenPlayers.size();
-		
-		int[][] judgePattern = 
+		/*
+		 * 下のjudgePatternは、二つの[]の中にGU,CHOKI,PAを入れると強いほうの手が返却される
+		 * 例:int x =judgePattern[GU][CHIKI]
+		 *    この例だとint xにGUが格納される
+		 */
+		int[][] judgePattern =
 			{{AIKO, GU, PA},{GU, AIKO, CHOKI},{PA, CHOKI, AIKO}};
 		
 		if(playerNum <= 1){
 			System.out.println("プレイヤーが足りません");
 			return;
+//		}
+//		//はじめに書いた二人専用のじゃんけん審判
+//		if(playerNum == 2){
+//			final String player1Name = jankenPlayers.get(0).getName();
+//			final int player1Hand =jankenPlayers.get(0).showHand();
+//			final String player2Name = jankenPlayers.get(1).getName();
+//			final int player2Hand =jankenPlayers.get(1).showHand();
+//			final int winPattern = judgePattern[player1Hand][player2Hand];
+//			
+//			showHand(player1Name, player1Hand);
+//			showHand(player2Name, player2Hand);
+//			
+//			if(winPattern == AIKO){
+//				System.out.println("引き分け！");
+//			}else if(player1Hand == winPattern){
+//				System.out.println(jankenPlayers.get(0).getName() + "の勝利！");
+//				jankenPlayers.get(0).notifyHand(true);
+//				jankenPlayers.get(1).notifyHand(false);
+//			}else{
+//				System.out.println(jankenPlayers.get(1).getName() + "の勝利！");
+//				jankenPlayers.get(0).notifyHand(false);
+//				jankenPlayers.get(1).notifyHand(true);
+//			}
 		}
 		
-		if(playerNum == 2){
-			final String player1Name = jankenPlayers.get(0).getName();
-			final int player1Hand =jankenPlayers.get(0).showHand();
-			final String player2Name = jankenPlayers.get(1).getName();
-			final int player2Hand =jankenPlayers.get(1).showHand();
-			final int winPattern = judgePattern[player1Hand][player2Hand];
-			
-			printHand(player1Name, player1Hand);
-			printHand(player2Name, player2Hand);
-			
-			if(winPattern == AIKO){
-				System.out.println("引き分け！");
-			}else if(player1Hand == winPattern){
-				System.out.println(jankenPlayers.get(0).getName() + "の勝利！");
-				jankenPlayers.get(0).notifyHand(true);
-				jankenPlayers.get(1).notifyHand(false);
-			}else{
-				System.out.println(jankenPlayers.get(1).getName() + "の勝利！");
-				jankenPlayers.get(0).notifyHand(false);
-				jankenPlayers.get(1).notifyHand(true);
+		boolean putOutGu = false;
+		boolean putOutChoki = false;
+		boolean putOutPa = false;
+		ArrayList<Integer> handTypes = new ArrayList<Integer>(); //このラウンドで使われた手の種類を格納(最大３つ)
+		ArrayList<Integer> playerHands = new ArrayList<Integer>(); //それぞれのプレイヤーの手を格納
+		//このラウンドに使われた手の種類と数をチェックしている
+		for(Player player : jankenPlayers){
+			final int hand = player.showHand();
+			if(hand == GU && putOutGu == false){
+				putOutGu = true;
+				handTypes.add(GU);
+			}else if(hand == CHOKI && putOutChoki == false){
+				putOutChoki = true;
+				handTypes.add(CHOKI);
+			}else if(hand == PA && putOutPa == false){
+				putOutPa = true;
+				handTypes.add(PA);
 			}
+			showHand(player.getName(),hand);
+			playerHands.add(hand);
+		}
+		//使われた手の種類が1か3ならあいこなので再起させる
+		if(handTypes.size() <= 1 || handTypes.size() >= 3){
+			System.out.println("引き分け！もう一度！\n");
+			judgeJanken(jankenPlayers);
+			return;
+		}
+		//handTypesにある二つの手をjudgePatternの引数にし、返却値とプレイヤーの手と比較して勝敗を判断する
+		final int winPattern = judgePattern[handTypes.get(0)][handTypes.get(1)];
+		boolean firstTime = true;
+		for(int i = 0 ;playerNum > i;i++){
 			
-		}else{
-			boolean guFlag = false;
-			boolean chokiFlag = false;
-			boolean paFlag = false;
-			ArrayList<Integer> handType = new ArrayList<Integer>();
-			ArrayList<Integer> playerHands = new ArrayList<Integer>();
-			
-			for(Player player : jankenPlayers){
-				final int hand = player.showHand();
-				if(hand == GU && !guFlag){
-					handType.add(GU);
-				}else if(hand == CHOKI && !chokiFlag){
-					handType.add(CHOKI);
-				}else if(hand == PA && !paFlag){
-					paFlag = true;
-					handType.add(PA);
-				}
-				printHand(player.getName(),hand);
-				playerHands.add(hand);
-			}
-			
-			if(handType.size() <= 1 || handType.size() >= 3){
-				System.out.println("引き分け！もう一度！\n");
-				judgeJanken(jankenPlayers);
-				return;
-			}
-			
-			final int winPattern = judgePattern[handType.get(0)][handType.get(1)];
-			
-			for(int i = 0 ;playerNum > i;i++){
-				if(playerHands.get(i) == winPattern){
-					System.out.print(jankenPlayers.get(i).getName() + ",");
+			if(playerHands.get(i) == winPattern){
+				if(firstTime){
+					System.out.print(jankenPlayers.get(i).getName());
 					jankenPlayers.get(i).notifyHand(true);
+					firstTime = false;
 				}else{
-					jankenPlayers.get(i).notifyHand(false);
+					System.out.print("," + jankenPlayers.get(i).getName());
+					jankenPlayers.get(i).notifyHand(true);
 				}
+			}else{
+				jankenPlayers.get(i).notifyHand(false);
 			}
-			System.out.println("の勝利！");
-		}	
+		}
+		System.out.println("の勝利！");
 	}
 
 	public void startJudge(ArrayList<Player> jankenPlayers,int roundNum){
+		System.out.println("ゲームを開始します 審判:" + this.name + "さん\n");
 		int MaxWinCount = 0;
-		String jankenchampion = "";
 		for(int i = 0; roundNum > i; i++){
 			judgeJanken(jankenPlayers);
 			System.out.println("\n---------------------------\n");
@@ -104,10 +119,16 @@ public class Judge {
 				MaxWinCount = player.getWinCount();
 			}
 		}
+		boolean firstTime = true;
 		System.out.print("\n優勝は");
 		for(Player player : jankenPlayers){
 			if(player.getWinCount() == MaxWinCount){
-				System.out.print(player.getName() + ",");
+				if(firstTime){
+					System.out.print(player.getName());
+					firstTime = false;
+				}else{
+					System.out.print("," + player.getName());
+				}
 			}
 		}
 		System.out.println("です！");
@@ -115,18 +136,18 @@ public class Judge {
 		jankenRanking(jankenPlayers);
 
 	}
-	
-	public void printHand(String name, int hand){
+	//プレイヤーの手を表示する
+	public void showHand(String name, int hand){
 		if(hand == GU){
-			System.out.printf("%-8s:ぐー\n", name);
+			System.out.printf("%-8s:グー\n", name);
 			return;
 		}else if(hand == CHOKI){
-			System.out.printf("%-8s:ちょき\n", name);
+			System.out.printf("%-8s:チョキ\n", name);
 			return;
 		}
-		System.out.printf("%-8s:ぱー\n", name);
+		System.out.printf("%-8s:パー\n", name);
 	}
-	
+	//シェルソートで勝った回数順に並べる
 	public void jankenRanking(ArrayList<Player> jankenPlayers){
 		
 		Player[] WinCounts = new Player[jankenPlayers.size()];
@@ -134,20 +155,20 @@ public class Judge {
 			WinCounts[i] = jankenPlayers.get(i);
 		}
 		for (int range = WinCounts.length / 2; range > 0; range /= 2) {
-			for (int h = 0; h < range; h++) {
-				for (int i = h + range; i < WinCounts.length; i += range) {
-					Player insertionData = WinCounts[i];
-					int j = i;
-					for (; j >= range && WinCounts[j - range].getWinCount() < insertionData.getWinCount(); j -= range) {
-						WinCounts[j] = WinCounts[j - range];
+			for (int i = 0; i < range; i++) {
+				for (int j = i + range; j < WinCounts.length; j += range) {
+					Player currentPlayer = WinCounts[j];
+					int k = j;
+					for (; k >= range && WinCounts[k - range].getWinCount() < currentPlayer.getWinCount(); k -= range) {
+						WinCounts[k] = WinCounts[k - range];
 					}
-					WinCounts[j] = insertionData;
+					WinCounts[k] = currentPlayer;
 				}
 			}
 		}
 		System.out.println("\nランキング");
 		for(int i = 0; WinCounts.length > i; i++){
-			System.out.println(i + "位:" + WinCounts[i].getName());
+			System.out.printf("%d位:%-8s %d勝\n",(i+1),WinCounts[i].getName(),WinCounts[i].getWinCount());
 		}
 	}
 	
